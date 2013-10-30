@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"	
+"http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts><package name="info" extends="struts-default" namespace="/">
+
+		<action name="log_*" class="LoginAction" method="{1}">	
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+			<result name="input">/pages/admin/Login.jsp</result>
+			<result name="logout" type="redirect">index.action</result>
+		</action>
+
+		<action name="index" class="InfoTypeAction">
+			<result name="success">/view/IndexTemp.jsp</result>
+		</action>
+		<action name="InfoAction" class="com.wjb.action.info.InfoAction">
+			<result name="success">/view/IndexTemp.jsp</result>
+		</action>
+		<action name="AddInfoAction" class="addInfoAction">
+			<result name="success">/index.jsp</result>
+			<result name="error">/view/IndexTemp.jsp</result>
+		</action>
+		<action name="adminListInfo" class="adminFindAction">
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="adminsingInfo" class="adminSingFindAction">
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="adminCheck" class="adminCheckAction">
+		<result name="success">	/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="adminDelete" class="adminDeleteAction">
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="adminMoney" class="adminMoneyAction">
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="adminSetMoney" class="adminSetMoneyAction">
+			<result name="success">/pages/admin/view/AdminTemp.jsp</result>
+		</action>
+		<action name="searchInfo" class="searchInfoAction">
+			<result name="success">/view/IndexTemp.jsp</result>
+		</action>
+		<action name="infoList" class="infoListAction">
+			<result name="success">/view/IndexTemp.jsp</result>
+		</action>
+		<action name="singleInfo" class="singleInfoAction">
+			<result name="success">/view/IndexTemp.jsp</result>
+		</action>	
+			
+</package>
+</struts>

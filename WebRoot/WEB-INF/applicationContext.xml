@@ -1,0 +1,342 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+	 http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName">
+			<value>com.mysql.jdbc.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:mysql://localhost:3306/info</value>
+		</property>
+		<property name="username">
+			<value>root</value>
+		</property>
+		<property name="password">
+			<value>mysql</value>
+		</property>
+	
+	</bean>
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource">
+			<ref local="dataSource"/>
+		</property>
+		
+		<property name="mappingResources">
+			<list>
+				<value>com/wjb/bean/User.hbm.xml</value>
+				<value>com/wjb/bean/Info.hbm.xml</value>
+				<value>com/wjb/bean/InfoType.hbm.xml</value>
+			
+			</list>
+			
+		</property>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">
+				org.hibernate.dialect.MySQL5Dialect
+				</prop>
+				<prop key="hibernate.show_sql">
+					true
+				</prop>	
+			</props>		
+		</property>
+
+	</bean>
+	<bean id="transactionMansger" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory"></property>
+	</bean>
+	
+	
+	<bean id="saveUserDao" class="com.wjb.dao.impl.LoginDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="saveUserServiceTarget" class="com.wjb.service.impl.LoginServiceImpl">
+		<property name="loginDao" ref="saveUserDao"></property>
+	</bean>
+	
+	<bean id="saveUserService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="saveUserServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="LoginAction" class="com.wjb.action.admin.LoginAction" scope="prototype">
+		<property name="loginService" ref="saveUserService"></property>
+	</bean>
+	
+	
+	<bean id="InfoTypeDao" class="com.wjb.dao.impl.InfoTypeDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="InfoTypeServiceTarget" class="com.wjb.service.impl.InfoTypeServiceImpl">
+		<property name="infoTypeDao" ref="InfoTypeDao"></property>
+	</bean>
+	<bean id="InfoTypeService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="InfoTypeServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="InfoTypeAction" class="com.wjb.action.info.FindTypeInfoAction" scope="prototype">
+		<property name="infoTypeService" ref="InfoTypeService"></property>
+	</bean>
+	
+	
+	<bean id="adminFindDao" class="com.wjb.dao.impl.AdminFindInfoDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminFindServiceTarget" class="com.wjb.service.impl.AdminFindInfoServiceImpl">
+		<property name="findinfo" ref="adminFindDao"></property>
+	</bean>
+	<bean id="adminFindService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminFindServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminFindAction" class="com.wjb.action.admin.FindInfo" scope="prototype">
+		<property name="findInfoService" ref="adminFindService"></property>
+	</bean>
+	
+		<bean id="addInfoDao" class="com.wjb.dao.impl.AddInfoDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="addInfoServiceTarget" class="com.wjb.service.impl.AddInfoServiceImpl">
+		<property name="addInfoDao" ref="addInfoDao"></property>
+	</bean>
+	<bean id="addInfoService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="addInfoServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="addInfoAction" class="com.wjb.action.info.AddInfoAction" scope="prototype">
+		<property name="addInfoService" ref="addInfoService"></property>
+	</bean>
+	
+	
+	
+	<bean id="adminSingFindDao" class="com.wjb.dao.impl.AdminSingFindDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminSingFindServiceTarget" class="com.wjb.service.impl.AdminSingFindServiceInfo">
+		<property name="singFind" ref="adminSingFindDao"></property>
+	</bean>
+	<bean id="adminSingFindService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminSingFindServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminSingFindAction" class="com.wjb.action.admin.SingFind" scope="prototype">
+		<property name="singFind" ref="adminSingFindService"></property>
+	</bean>
+	
+	
+	
+	<bean id="adminCheckDao" class="com.wjb.dao.impl.AdminUpdateDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminCheckServiceTarget" class="com.wjb.service.impl.AdminUpdateServiceImpl">
+		<property name="updatedao" ref="adminCheckDao"></property>
+	</bean>
+	<bean id="adminCheckService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminCheckServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminCheckAction" class="com.wjb.action.admin.UpdateInfo" scope="prototype">
+		<property name="updateService" ref="adminCheckService"></property>
+	</bean>
+	
+	
+	<bean id="adminDeleteDao" class="com.wjb.dao.impl.AdminDeleteDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminDeleteServiceTarget" class="com.wjb.service.impl.AdminDeleteServiceImpl">
+		<property name="deleteDao" ref="adminDeleteDao"></property>
+	</bean>
+	<bean id="adminDeleteService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminDeleteServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminDeleteAction" class="com.wjb.action.admin.DeleteInfo" scope="prototype">
+		<property name="deleteService" ref="adminDeleteService"></property>
+	</bean>
+	
+	
+	
+	<bean id="adminMoneyDao" class="com.wjb.dao.impl.AdminMoneyInfoDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminMoneyServiceTarget" class="com.wjb.service.impl.AdminMoneyInfoServiceImpl">
+		<property name="moneyInfoDao" ref="adminMoneyDao"></property>
+	</bean>
+	<bean id="adminMoneyService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminMoneyServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminMoneyAction" class="com.wjb.action.admin.SetMoneyInfo" scope="prototype">
+		<property name="moneyInfoService" ref="adminMoneyService"></property>
+	</bean>
+	
+	
+	
+	<bean id="adminSetMoneyDao" class="com.wjb.dao.impl.AdminSetMoneyDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="adminSetMoneyServiceTarget" class="com.wjb.service.impl.AdminSetMoneyServiceImpl">
+		<property name="setMoneyDao" ref="adminSetMoneyDao"></property>
+	</bean>
+	<bean id="adminSetMoneyService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="adminSetMoneyServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="adminSetMoneyAction" class="com.wjb.action.admin.SetMoney" scope="prototype">
+		<property name="setMoneyService" ref="adminSetMoneyService"></property>
+	</bean>
+	
+	
+	
+	
+	<bean id="searchInfoDao" class="com.wjb.dao.impl.InfoTypeDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="searchInfoServiceTarget" class="com.wjb.service.impl.InfoTypeServiceImpl">
+		<property name="infoTypeDao" ref="searchInfoDao"></property>
+	</bean>
+	<bean id="searchInfoService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="searchInfoServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="searchInfoAction" class="com.wjb.action.info.SearchInfoAction" scope="prototype">
+		<property name="searchService" ref="searchInfoService"></property>
+	</bean>
+	
+	
+	
+	
+	<bean id="infoListDao" class="com.wjb.dao.impl.InfoListDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="infoListServiceTarget" class="com.wjb.service.impl.InfoListServiceImpl">
+		<property name="infoListDao" ref="infoListDao"></property>
+	</bean>
+	<bean id="infoListService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="infoListServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="infoListAction" class="com.wjb.action.info.InfoList" scope="prototype">
+		<property name="infoListService" ref="infoListService"></property>
+	</bean>
+	
+	
+	
+	<bean id="singleInfoDao" class="com.wjb.dao.impl.SingleInfoDaoImpl">
+		<property name="sessionFactory">
+		<ref local="sessionFactory"/>
+		</property>
+	</bean>
+	<bean id="singleInfoServiceTarget" class="com.wjb.service.impl.SingleInfoServiceImpl">
+		<property name="singleInfoDao" ref="singleInfoDao"></property>
+	</bean>
+	<bean id="singleInfoService" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="target" ref="singleInfoServiceTarget"></property>
+		<property name="transactionManager" ref="transactionMansger"></property>
+		<property name="transactionAttributes">
+			<props>
+				<prop key="find*">PROPAGATION_REQUIRED,readOnly</prop>
+				<prop key="*">PROPAGATION_REQUIRED</prop>
+			</props>
+		</property>
+	</bean>
+	<bean id="singleInfoAction" class="com.wjb.action.info.SingleInfo" scope="prototype">
+		<property name="singleInfoService" ref="singleInfoService"></property>
+	</bean>
+	
+	
+	
+</beans>

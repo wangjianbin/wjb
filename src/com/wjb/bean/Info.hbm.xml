@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+          "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+          "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+ <hibernate-mapping>
+ 
+ <class name="com.wjb.bean.Info" table="tb_info">
+	<id name="id" column="id" type="int">
+		<generator class="increment"></generator>
+	</id> 
+	<property name="infotitle" column="info_title" type="string"></property>
+	<property name="infocount" column="info_content" type="string"></property>
+	<property name="infolinkman" column="info_linkman" type="string"></property>
+	<property name="infophone" column="info_phone" type="string"></property>
+	<property name="infoemail" column="info_email" type="string"></property>
+	<property name="infodate" column="info_date" type="date"></property>
+	<property name="infostate" column="info_state" type="string"></property>
+	<property name="infopayfor" column="info_payfor" type="string"></property>
+	<many-to-one name="infotype" class="com.wjb.bean.InfoType">
+		<column name="info_type"></column>
+	</many-to-one>
+ </class>
+
+ 
+ </hibernate-mapping>
